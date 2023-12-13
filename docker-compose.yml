@@ -1,0 +1,18 @@
+version: '3'
+networks: 
+  broker-kafka:
+    driver: bridge  
+
+services:
+  database:
+    image: 'postgres:latest'
+    networks: 
+      - broker-kafka    
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: default_database
+    volumes:
+      - ./postgres-data/init.sql:/docker-entrypoint-initdb.d/init.sql
