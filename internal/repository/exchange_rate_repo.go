@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"log"
 
@@ -22,19 +21,6 @@ func (b *ExchangeRateRepo) SaveExchangeRateRepo(ctx context.Context, exchangeRat
 
 	if err := b.DB.WithContext(ctx).Create(&exchangeRate).Error; err != nil {
 		log.Println("error creating an exchange rate", err.Error())
-		return err
-	}
-
-	var response map[string]interface{}
-
-	data, err := json.Marshal(exchangeRate)
-	if err != nil {
-		log.Println("error marshal exchange rate", err.Error())
-		return err
-	}
-	err = json.Unmarshal(data, &response)
-	if err != nil {
-		log.Println("error unmarshal exchange rate", err.Error())
 		return err
 	}
 

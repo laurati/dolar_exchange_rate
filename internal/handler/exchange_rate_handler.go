@@ -24,7 +24,7 @@ func NewExchangeHandler(Repo *repository.ExchangeRateRepo) *ExchangeHandler {
 	}
 }
 
-func (h *ExchangeHandler) GetExchangeRateByCode(c *gin.Context) {
+func (h *ExchangeHandler) GetExchangeRateByCodeAndSave(c *gin.Context) {
 
 	code := c.Param("code")
 
@@ -91,5 +91,52 @@ func (h *ExchangeHandler) GetAllExchangeRate(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, exchanges)
+
+}
+
+func (h *ExchangeHandler) GetDolarExchangeRate(c *gin.Context) {
+
+	dolarUrl := os.Getenv("EXCHANGE_DOLAR_API_URL")
+
+	request, err := http.NewRequest("GET", dolarUrl, nil)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	request.Header.Add("Content-Type", "application/json")
+
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	if response.StatusCode != http.StatusOK {
+		log.Printf("Server error: %s\n", response.Status)
+		c.JSON(response.StatusCode, nil)
+	}
+
+	var exchangeRateMap map[string]entity.ExchangeRate
+	err = json.Unmarshal(body, &exchangeRateMap)
+	if err != nil {
+		log.Println("error unmarshal:", err)
+		return
+	}
+
+	var key string
+	for chave := range exchangeRateMap {
+		key = chave
+		break
+	}
+
+	exchangeRate := exchangeRateMap[key]
+
+	c.JSON(http.StatusOK, exchangeRate)
 
 }
