@@ -1,15 +1,22 @@
 package router
 
-// func InitializeRouter(dolarHandler *handler.DolarHandler) *gin.Engine {
-// 	router := gin.Default()
+import (
+	"net/http"
 
-// 	router.GET("/", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, "up and running...") })
+	"github.com/gin-gonic/gin"
+	"github.com/laurati/dolar_exchange_rate/internal/handler"
+)
 
-// dolarExchange := router.Group("/dolar")
-// {
-// 	dolarExchange.GET("/", dolarHandler.GetDolarExchangeRate)
+func InitializeRouter(exchange *handler.ExchangeHandler) *gin.Engine {
+	router := gin.Default()
 
-// }
+	router.GET("/", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, "up and running...") })
 
-// 	return router
-// }
+	exchangeRate := router.Group("/exchange")
+	{
+		exchangeRate.GET("/:code", exchange.GetExchangeRateByCode)
+
+	}
+
+	return router
+}

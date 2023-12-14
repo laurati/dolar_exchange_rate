@@ -1,6 +1,6 @@
 module github.com/laurati/dolar_exchange_rate
 
-go 1.18
+go 1.19
 
 require (
 	github.com/gin-gonic/gin v1.9.1
