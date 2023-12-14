@@ -15,7 +15,7 @@ func InitializeRouter(exchange *handler.ExchangeHandler) *gin.Engine {
 	exchangeRate := router.Group("/exchange")
 	{
 		exchangeRate.GET("/:code", exchange.GetExchangeRateByCode)
-
+		exchangeRate.GET("/", exchange.GetAllExchangeRate)
 	}
 
 	return router

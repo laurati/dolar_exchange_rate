@@ -41,7 +41,7 @@ func (b *ExchangeRateRepo) SaveExchangeRateRepo(ctx context.Context, exchangeRat
 	return nil
 }
 
-func (b *ExchangeRateRepo) ReadExchangeRateRepo(ctx context.Context) ([]map[string]interface{}, error) {
+func (b *ExchangeRateRepo) ReadExchangeRateRepo(ctx context.Context) ([]entity.ExchangeRate, error) {
 	exchangeRates := []entity.ExchangeRate{}
 	err := b.DB.WithContext(ctx).Find(&exchangeRates).Error
 	if err != nil {
@@ -50,30 +50,9 @@ func (b *ExchangeRateRepo) ReadExchangeRateRepo(ctx context.Context) ([]map[stri
 	}
 
 	if len(exchangeRates) == 0 {
-		return nil, errors.New("exchange rates can't be empty")
+		return nil, errors.New("list exchange rates is empty")
 	}
 
-	var respo []map[string]interface{}
-
-	for _, v := range exchangeRates {
-
-		var response map[string]interface{}
-
-		data, err := json.Marshal(v)
-		if err != nil {
-			log.Println("error marshal exchange rate", err.Error())
-			return nil, err
-		}
-		err = json.Unmarshal(data, &response)
-		if err != nil {
-			log.Println("error unmarshal exchange rate", err.Error())
-			return nil, err
-		}
-
-		respo = append(respo, response)
-
-	}
-
-	return respo, nil
+	return exchangeRates, nil
 
 }

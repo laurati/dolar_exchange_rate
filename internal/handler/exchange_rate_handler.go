@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -9,6 +10,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/laurati/dolar_exchange_rate/internal/entity"
 	"github.com/laurati/dolar_exchange_rate/internal/repository"
 )
 
@@ -49,39 +51,45 @@ func (h *ExchangeHandler) GetExchangeRateByCode(c *gin.Context) {
 	}
 
 	if response.StatusCode != http.StatusOK {
-		log.Printf("Erro no servidor: %s\n", response.Status)
+		log.Printf("Server error: %s\n", response.Status)
 	}
 
-	laura := make(map[string]interface{})
-
-	err = json.Unmarshal(body, &laura)
+	var exchangeRateMap map[string]entity.ExchangeRate
+	err = json.Unmarshal(body, &exchangeRateMap)
 	if err != nil {
-		fmt.Println("Erro ao fazer unmarshal:", err)
+		log.Println("error unmarshal:", err)
 		return
 	}
 
-	fmt.Println(laura)
-
 	var key string
-	for chave := range laura {
+	for chave := range exchangeRateMap {
 		key = chave
 		break
 	}
 
-	fmt.Println(key)
+	exchangeRate := exchangeRateMap[key]
 
-	if subMap, ok := laura[key].(map[string]interface{}); ok {
-		if bid, ok := subMap["bid"].(string); ok {
-			fmt.Println("O valor de bid é:", bid)
-		} else {
-			fmt.Println("A chave 'bid' não foi encontrada no mapa interno.")
-		}
-	} else {
-		fmt.Println("A chave ", key, " não foi encontrada no mapa principal.")
+	h.Repo.SaveExchangeRateRepo(c.Request.Context(), &exchangeRate)
+
+	exResponse := fmt.Sprintf("The current %v exchange rate is %v", exchangeRate.Code, exchangeRate.Bid)
+
+	c.JSON(http.StatusOK, exResponse)
+
+}
+
+func (h *ExchangeHandler) GetAllExchangeRate(c *gin.Context) {
+	exchanges, err := h.Repo.ReadExchangeRateRepo(c.Request.Context())
+
+	if err == errors.New("list exchange rates is empty") {
+		c.JSON(http.StatusNotFound, err)
+		return
 	}
 
-	// TODO:salvar no banco
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
 
-	c.JSON(http.StatusOK, laura)
+	c.JSON(http.StatusOK, exchanges)
 
 }

@@ -24,6 +24,7 @@ func main() {
 
 	postgresDsn := configuration.GetPostgresConnectionString()
 	dbPostgres := database.ConnectDatabase(ctx, postgres.Open(postgresDsn))
+	database.Migrate(dbPostgres)
 
 	repo := repository.NewExchangeRateRepo(dbPostgres)
 	handler := handler.NewExchangeHandler(repo)
