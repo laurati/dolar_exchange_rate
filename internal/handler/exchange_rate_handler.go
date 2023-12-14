@@ -10,8 +10,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/laurati/dolar_exchange_rate/internal/entity"
-	"github.com/laurati/dolar_exchange_rate/internal/repository"
+	"github.com/laurati/exchange_rate/internal/entity"
+	"github.com/laurati/exchange_rate/internal/repository"
 )
 
 type ExchangeHandler struct {

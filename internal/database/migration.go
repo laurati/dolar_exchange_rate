@@ -3,7 +3,7 @@ package database
 import (
 	"log"
 
-	"github.com/laurati/dolar_exchange_rate/internal/entity"
+	"github.com/laurati/exchange_rate/internal/entity"
 	"gorm.io/gorm"
 )
 

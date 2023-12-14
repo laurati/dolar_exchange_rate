@@ -1,4 +1,4 @@
-module github.com/laurati/dolar_exchange_rate
+module github.com/laurati/exchange_rate
 
 go 1.19
 

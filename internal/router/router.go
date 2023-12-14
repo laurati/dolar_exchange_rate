@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/laurati/dolar_exchange_rate/internal/handler"
+	"github.com/laurati/exchange_rate/internal/handler"
 )
 
 func InitializeRouter(exchange *handler.ExchangeHandler) *gin.Engine {

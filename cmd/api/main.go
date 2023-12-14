@@ -5,12 +5,12 @@ import (
 	"log"
 	"os"
 
-	"github.com/laurati/dolar_exchange_rate/internal/configuration"
-	"github.com/laurati/dolar_exchange_rate/internal/database"
-	"github.com/laurati/dolar_exchange_rate/internal/handler"
-	"github.com/laurati/dolar_exchange_rate/internal/repository"
-	"github.com/laurati/dolar_exchange_rate/internal/router"
-	"github.com/laurati/dolar_exchange_rate/internal/server"
+	"github.com/laurati/exchange_rate/internal/configuration"
+	"github.com/laurati/exchange_rate/internal/database"
+	"github.com/laurati/exchange_rate/internal/handler"
+	"github.com/laurati/exchange_rate/internal/repository"
+	"github.com/laurati/exchange_rate/internal/router"
+	"github.com/laurati/exchange_rate/internal/server"
 	"gorm.io/driver/postgres"
 )
 
